@@ -1,14 +1,25 @@
 #Este arquivo define a função principal
+import sys
+from arquivo import *
+from Automato import *
 
-import frontend as frontend
+def main():
+    if len(sys.argv) != 3:
+        print("Uso correto: python3 main.py <arquivo_automato.txt> <arquivo_strings.txt>")
+        sys.exit(1)
 
-afd = frontend.input_afd()
-if afd:
+    nome_arquivo_automato = sys.argv[1]
+    nome_arquivo_strings = sys.argv[2]
 
+    try:
+        automato = cria_automato_de_arquivo(nome_arquivo_automato)
+        print(automato)
+        resultados = processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings)
+        for string, resultado in resultados.items():
+            print(f"'{string}': {resultado}")
+    except Exception as e:
+        print(f"Erro ao processar os arquivos: {e}")
+        sys.exit(1)
 
-    for i in range(int(input("Processar Quantas strings? "))):
-        string_para_processar = input("Digite uma string para processar. ")
-        print(afd.processa_string(string_para_processar))
-
-else:
-    print("Erro.\n")
+if __name__ == "__main__":
+    main()

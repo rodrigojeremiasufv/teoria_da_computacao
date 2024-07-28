@@ -1,7 +1,9 @@
-#Este arquivo define a classe principal que representa um autômato finito.
+#Este arquivo define a classe principal que representa um autômato, e seus principais métodos.
+
+from collections import defaultdict, deque
 
 class AutomatoFinito:
-    def __init__(self, estados, alfabeto, transicoes, estado_inicial, estados_finais, deterministico=True):
+    def __init__(self, estados, alfabeto, transicoes, estado_inicial, estados_finais, deterministico=False):
         self.estados = estados
         self.alfabeto = alfabeto
         self.transicoes = transicoes
@@ -9,6 +11,9 @@ class AutomatoFinito:
         self.estados_finais = estados_finais
         self.deterministico = deterministico
         self.verifica_alfabeto()
+        self.deterministico = self.e_deterministico()
+
+
     
     def __str__(self):
         return (f"Estado inicial: {self.estado_inicial}\n"
@@ -70,4 +75,57 @@ class AutomatoFinito:
             estados_atuais = next_states
         
         return any(estado in self.estados_finais for estado in estados_atuais)
+
+    def e_deterministico(self):
+        if not self.deterministico:
+            return False
+        for estado in self.estados:
+            transicoes_estado = self.transicoes.get(estado, {})
+            for letra in transicoes_estado:
+                if len(transicoes_estado[letra]) > 1:
+                    return False
+        return True
+
+
+    def afn_para_afd(self):
+        if self.deterministico:
+            raise ValueError("O automato já é um AFD. ")
+
+        afd_estados = set()
+        afd_transicoes = {}
+        afd_estado_inicial = frozenset([self.estado_inicial])
+        afd_estados_finais = set()
+        
+        fila = deque([afd_estado_inicial])
+        afd_transicoes[afd_estado_inicial] = {}
+        
+        while fila:
+            conjunto_atual = fila.popleft()
+            afd_estados.add(conjunto_atual)
+            
+            for letra in self.alfabeto:
+                prox_conjunto = set()
+                for estado in conjunto_atual:
+                    if letra in self.transicoes.get(estado, {}):
+                        prox_conjunto.update(self.transicoes[estado][letra])
+                prox_conjunto = frozenset(prox_conjunto)
+                
+                if prox_conjunto:
+                    if prox_conjunto not in afd_transicoes:
+                        afd_transicoes[prox_conjunto] = {}
+                        fila.append(prox_conjunto)
+                    afd_transicoes[conjunto_atual][letra] = prox_conjunto
+                    
+                    if any(estado in self.estados_finais for estado in prox_conjunto):
+                        afd_estados_finais.add(prox_conjunto)
+        
+        return AutomatoFinito(
+            estados=afd_estados,
+            alfabeto=self.alfabeto,
+            transicoes=afd_transicoes,
+            estado_inicial=afd_estado_inicial,
+            estados_finais=afd_estados_finais,
+            deterministico=True
+        )
+
 
