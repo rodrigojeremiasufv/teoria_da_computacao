@@ -77,15 +77,18 @@ class AutomatoFinito:
         return any(estado in self.estados_finais for estado in estados_atuais)
 
     def e_deterministico(self):
-        if not self.deterministico:
-            return False
         for estado in self.estados:
             transicoes_estado = self.transicoes.get(estado, {})
-            for letra in transicoes_estado:
-                if len(transicoes_estado[letra]) > 1:
-                    return False
+            
+            for letra in self.alfabeto:
+                if letra in transicoes_estado:
+                    destino = transicoes_estado[letra]
+                    if not isinstance(destino, str) or len(destino) != 1:
+                        return False
+                else:
+                    continue                    
         return True
-
+    
 
     def afn_para_afd(self):
         if self.deterministico:
@@ -129,3 +132,62 @@ class AutomatoFinito:
         )
 
 
+
+    def minimiza_afd(self):
+        if not self.deterministico:
+            raise ValueError("A minimização só é aplicável a AFDs.")
+
+        estados = self.estados
+        estado_inicial = self.estado_inicial
+        estados_finais = self.estados_finais
+        alfabeto = self.alfabeto
+        transicoes = self.transicoes
+
+        particoes = {frozenset(estados_finais), frozenset(estados - estados_finais)}
+
+        def obter_transicao_estado(estado):
+            return {letra: transicoes.get(estado, {}).get(letra, None) for letra in alfabeto}
+        
+        def obter_classe_de_equivalencia(estado):
+            transicoes_estado = obter_transicao_estado(estado)
+            return frozenset(transicoes_estado.items())
+
+        mudanca = True
+        while mudanca:
+            nova_particao = defaultdict(set)
+            for p in particoes:
+                for estado in p:
+                    classe = obter_classe_de_equivalencia(estado)
+                    nova_particao[classe].add(estado)
+            
+            nova_particoes = set(map(frozenset, nova_particao.values()))
+            mudanca = nova_particoes != particoes
+            particoes = nova_particoes
+
+        estado_mapeamento = {}
+        estado_novo = 0
+        for p in particoes:
+            for estado in p:
+                estado_mapeamento[estado] = f"q{estado_novo}"
+            estado_novo += 1
+        
+        novos_estados = set(estado_mapeamento.values())
+        novos_estados_finais = {estado_mapeamento[e] for e in estados_finais if e in estado_mapeamento}
+        novos_transicoes = {}
+        
+        for p in particoes:
+            representative = next(iter(p))
+            novos_transicoes[estado_mapeamento[representative]] = {}
+            for letra in alfabeto:
+                destino = transicoes.get(representative, {}).get(letra)
+                if destino in estado_mapeamento:
+                    novos_transicoes[estado_mapeamento[representative]][letra] = estado_mapeamento[destino]
+        
+        return AutomatoFinito(
+            estados=novos_estados,
+            alfabeto=alfabeto,
+            transicoes=novos_transicoes,
+            estado_inicial=estado_mapeamento.get(estado_inicial, None),
+            estados_finais=novos_estados_finais,
+            deterministico=True
+        )

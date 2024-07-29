@@ -8,7 +8,7 @@ python3 main.py <arquivo_automato.txt> <arquivo_strings.txt>
 exemplo: python3 main.py automato.txt testes.txt
 ```
 
-Para verificara a igualdade entre dois automatos, execute:
+Para verificar a igualdade entre dois automatos, execute:
 
 ```
 python3 igualdade.py <arquivo_automato.txt> <arquivo_automato2.txt>
@@ -19,10 +19,11 @@ exemplo: python3 igualdade.py automato.txt automato2.txt
 - [x] Criar uma aplicação capaz de receber como entrada um Autômato Finito Determinístico (AFD) ou Não-Determinístico (AFN).
 - [x] Converter uma AFN para AFD caso necessário.
 - [x] Simular a aceitação de palavras.
-- [ ] Demonstrar equivalencia entre AFD e AFN.
-- [ ] Minimizar AFDs.
+- [x] Demonstrar equivalencia entre AFD e AFN.
+- [x] Minimizar AFDs.
 - [ ] Front-end.
-- [ ] Tratamento de Erros e correções.
+- [ ] Tratamento de Erros.
+- [ ] Correção de bugs.
 - [ ] Testes.
 - [x] Criação de autômatos por arquivos. 
 
