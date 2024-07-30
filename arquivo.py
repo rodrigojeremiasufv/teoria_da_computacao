@@ -1,6 +1,8 @@
 #Este arquivo define funções importantes para criação de automatos a partir de arquivos
 
 from Automato import AutomatoFinito
+
+#cria um novo automato a partir de um arquivo
 def cria_automato_de_arquivo(nome_arquivo):
     with open(nome_arquivo, 'r') as nome_arquivo:
         linhas = [line.strip() for line in nome_arquivo if line.strip()]
@@ -33,9 +35,9 @@ def cria_automato_de_arquivo(nome_arquivo):
         estado_inicial=estado_inicial,
         estados_finais=estados_finais,
     )
-
     return automato
 
+#Processa todas as strings presentes em um arquivo, linha por linha 
 def processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings):
     automato = cria_automato_de_arquivo(nome_arquivo_automato)
     with open(nome_arquivo_strings, 'r') as nome_arquivo:
@@ -44,7 +46,6 @@ def processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings):
 
     for string in strings:
         resultado = automato.processa_string(string)
-        print(string+":",resultado)
         resultados[string] = resultado
 
     return resultados

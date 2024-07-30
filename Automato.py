@@ -3,7 +3,7 @@
 from collections import defaultdict, deque
 
 class AutomatoFinito:
-    def __init__(self, estados, alfabeto, transicoes, estado_inicial, estados_finais, deterministico=False):
+    def __init__(self, estados, alfabeto, transicoes, estado_inicial, estados_finais, deterministico=True):
         self.estados = estados
         self.alfabeto = alfabeto
         self.transicoes = transicoes
