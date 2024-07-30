@@ -1,8 +1,9 @@
-aaaaaaaaa
-bbbbbbbbb
-a
-b
-abab
-baba
-aabb
-bbaa
+AB
+ABAB
+ABABAB
+A
+B
+ABA
+BA
+BB
+ABABB

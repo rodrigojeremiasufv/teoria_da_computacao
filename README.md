@@ -4,8 +4,8 @@ Este repositório tem como objetivo disponibilizar o trabalho desenvolvido ao de
 Para executar a verificação de um autômato, certifique-se que o python esteja instalado e execute:
 
 ```
-python3 main.py <arquivo_automato.txt> <arquivo_strings.txt>
-exemplo: python3 main.py automato.txt testes.txt
+python3 processa.py <arquivo_automato.txt> <arquivo_strings.txt>
+exemplo: python3 processa.py automato.txt testes.txt
 ```
 
 Para verificar a igualdade entre dois automatos, execute:

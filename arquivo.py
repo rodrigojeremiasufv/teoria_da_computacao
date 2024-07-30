@@ -41,13 +41,11 @@ def cria_automato_de_arquivo(nome_arquivo):
 def processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings):
     automato = cria_automato_de_arquivo(nome_arquivo_automato)
     with open(nome_arquivo_strings, 'r') as nome_arquivo:
-        strings = [line.strip() for line in nome_arquivo if line.strip()]
-    resultados = {}
-
-    for string in strings:
-        resultado = automato.processa_string(string)
-        resultados[string] = resultado
-
-    return resultados
+        strings = [line.strip() for line in nome_arquivo if line.strip(s)]
+        resultados = {}
+        for string in strings:
+            resultado = automato.processa_string(string)
+            resultados[string] = resultado
+        return resultados
 
 
