@@ -28,21 +28,6 @@ class AutomatoFinito:
         if not all(letra in self.alfabeto for transition in self.transicoes.values() for letra in transition.keys()):
             raise ValueError("A transição apresenta símbolos que não estão presentes no alfabeto.")
 
-    def adiciona_transicao(self, estado_origem, letra, estado_final):
-        if letra not in self.alfabeto:
-            raise ValueError("A letra não está presente no alfabeto.")
-        if estado_origem not in self.estados or estado_final not in self.estados:
-            raise ValueError("O Estado de origem não está presente na lista de estados do autômato.")
-        
-        if self.deterministico:
-            if letra in self.transicoes.get(estado_origem, {}):
-                raise ValueError("Transição já foi definida para esta letra.")
-        
-        if estado_origem not in self.transicoes:
-            self.transicoes[estado_origem] = {}
-        
-        self.transicoes[estado_origem][letra] = estado_final
-
     def processa_string(self, input_string):
         passou = True
         estado_atual = self.estado_inicial
@@ -52,18 +37,18 @@ class AutomatoFinito:
             if (not (char in self.alfabeto)):
                 # print("Símbolo não está presente no alfabeto")
                 passou = False
-    
+            if not (char in self.transicoes[estado_atual]):
+                passou = False
             if(estado_atual in self.transicoes):
                 if char in self.transicoes[estado_atual]:
                     novo_estado = self.transicoes[estado_atual][char]
                     # print(f"trocando de estado: {estado_atual} -> {novo_estado}")
                     estado_atual = novo_estado
         
-            else:
-                passou = False
+                else:
+                    passou = False
         if(estado_atual in self.estados_finais):
-            # print("O automato finalizou em um estado final")
-            passou = True
+            passou = passou
         else:
             # print("O automato não finalzou em um estado final, palavra inválida")
             passou = False
@@ -71,17 +56,8 @@ class AutomatoFinito:
 
     def e_deterministico(self):
         for estado in self.estados:
-            transicoes_estado = self.transicoes.get(estado, {})
-            
-            for letra in self.alfabeto:
-                if letra in transicoes_estado:
-                    destino = transicoes_estado[letra]
-                    if not isinstance(destino, str) or len(destino) != 1:
-                        return False
-                else:
-                    continue                    
-        return True
-    
+            print(estado)
+
 
     def afn_para_afd(self):
         if self.deterministico:

@@ -1,4 +1,6 @@
 #Este arquivo define a função principal
+
+
 import sys
 from arquivo import *
 from Automato import *
@@ -21,9 +23,9 @@ def processa():
         for string, resultado in resultados.items():
             temp = ""
             if resultado:
-                temp = "[APROVADO ]"
+                temp = "[ APROVADO  ]"
             else:
-                temp = "[REJEITADO]"
+                temp = "[ REJEITADO ]"
             print(temp, string)
 
     except Exception as e:

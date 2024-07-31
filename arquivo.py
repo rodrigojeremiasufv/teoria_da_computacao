@@ -52,4 +52,5 @@ def processa_strings_arquivo(automato, nome_arquivo_strings):
     return(resultado)
         
 
-
+automato = cria_automato_de_arquivo("./automatos/automato.txt")
+automato.processa_string("ABA")
