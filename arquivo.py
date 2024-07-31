@@ -37,15 +37,19 @@ def cria_automato_de_arquivo(nome_arquivo):
     )
     return automato
 
-#Processa todas as strings presentes em um arquivo, linha por linha 
-def processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings):
-    automato = cria_automato_de_arquivo(nome_arquivo_automato)
+def carrega_arquivo_strings(nome_arquivo_strings):
     with open(nome_arquivo_strings, 'r') as nome_arquivo:
-        strings = [line.strip() for line in nome_arquivo if line.strip(s)]
-        resultados = {}
-        for string in strings:
-            resultado = automato.processa_string(string)
-            resultados[string] = resultado
-        return resultados
+        strings = [line.strip() for line in nome_arquivo if line.strip()]
+        return strings
+
+
+#Processa todas as strings presentes em um arquivo, linha por linha 
+def processa_strings_arquivo(automato, nome_arquivo_strings):
+    strings_para_processar = carrega_arquivo_strings(nome_arquivo_strings)
+    resultado = {}
+    for string in strings_para_processar:
+        resultado[string] = automato.processa_string(string)
+    return(resultado)
+        
 
 

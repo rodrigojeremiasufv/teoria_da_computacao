@@ -1,7 +1,7 @@
 s3,s0,s1,s2
 A,B
 s3,A,s0
-S0,B,s1
+s0,B,s1
 s1,A,s2
 s2,B,s1
 s3

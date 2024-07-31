@@ -43,63 +43,31 @@ class AutomatoFinito:
         
         self.transicoes[estado_origem][letra] = estado_final
 
-    # def processa_string(self, string):
-    #     if self.deterministico:
-    #         return self.processa_string_afd(string)
-    #     else:
-    #         return self.processa_string_afn(string)
-
-    # def processa_string_afd(self, string):
-    #     estado_atual = self.estado_inicial
-    #     for letra in string:
-    #         if letra not in self.alfabeto:
-    #             raise ValueError(f"Letra '{letra}' não está presente no alfabeto.")
-    #         if letra not in self.transicoes.get(estado_atual, {}):
-    #             return False
-    #         estado_atual = self.transicoes[estado_atual][letra]
-    #     return estado_atual in self.estados_finais
-
-    # def processa_string_afn(self, string):
-    #     estados_atuais = {self.estado_inicial}
-    #     for letra in string:
-    #         if letra not in self.alfabeto:
-    #             raise ValueError(f"Letra '{letra}' noão está presente no alfabeto.")
-            
-    #         next_states = set()
-    #         for estado in estados_atuais:
-    #             if letra in self.transicoes.get(estado, {}):
-    #                 next_states.update(self.transicoes[estado][letra])
-            
-    #         if not next_states:
-    #             return False
-            
-    #         estados_atuais = next_states
-        
-    #     return any(estado in self.estados_finais for estado in estados_atuais)
-
-
     def processa_string(self, input_string):
-        current_state = self.estado_inicial
-        
+        passou = True
+        estado_atual = self.estado_inicial
+        # print(f'Estado atual: {estado_atual}')
         for char in input_string:
-            print(input_string)
-            if char not in self.alfabeto:
-                return False  # If character is not in the alphabet, string is invalid
+            # print("processando", char,"no estado", estado_atual)
+            if (not (char in self.alfabeto)):
+                # print("Símbolo não está presente no alfabeto")
+                passou = False
+    
+            if(estado_atual in self.transicoes):
+                if char in self.transicoes[estado_atual]:
+                    novo_estado = self.transicoes[estado_atual][char]
+                    # print(f"trocando de estado: {estado_atual} -> {novo_estado}")
+                    estado_atual = novo_estado
         
-            if current_state in self.transicoes and char in self.transicoes[current_state]:
-                current_state = self.transicoes[current_state][char]
             else:
-                return False  # No transition defined for the current state and input character
-        
-        # After processing all characters, check if the current state is in the final states
-        if current_state in self.estados_finais:
-            return True
+                passou = False
+        if(estado_atual in self.estados_finais):
+            # print("O automato finalizou em um estado final")
+            passou = True
         else:
-            return False
-
-
-
-
+            # print("O automato não finalzou em um estado final, palavra inválida")
+            passou = False
+        return passou                
 
     def e_deterministico(self):
         for estado in self.estados:

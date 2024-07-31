@@ -17,10 +17,15 @@ def processa():
         print(automato)
         print("\n")
         print("----------------- RESULTADO --------------------")
-        resultados = processa_strings_arquivo(nome_arquivo_automato, nome_arquivo_strings)
+        resultados = processa_strings_arquivo(automato, nome_arquivo_strings)
         for string, resultado in resultados.items():
-            # print(f"'{resultado}': {string}")
-            print("")
+            temp = ""
+            if resultado:
+                temp = "[APROVADO ]"
+            else:
+                temp = "[REJEITADO]"
+            print(temp, string)
+
     except Exception as e:
         print(f"Erro ao processar os arquivos: {e}")
         sys.exit(1)
